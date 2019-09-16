@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="./materialize/css/materialize.min.css" media="screen,projection" />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <title>Regex Sim 2019</title>
+</head>
+
+<style>
+    .center-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .center-forced {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    footer {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+    }
+
+    .btn {
+        width: 70%;
+        font-size: 12pt;
+    }
+
+    .right {
+        font-weight: bold;
+        color: rgba(0, 192, 0, .85);
+    }
+
+    .wrong {
+        font-weight: bold;
+        color: rgba(255, 0, 0, .85);
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="section">
+            <h4 class="blue-text darken-3 center-align">Regex Simulator 2019</h4>
+        </div>
+        <div class="section">
+            <div class="card-panel">
+                <div class="row">
+                    <div class="input-field col s11">
+                        <input id="user_regexp" type="text" onchange="TriggerChange()" />
+                        <label for="user_regexp">Expressão Regular</label>
+                    </div>
+                    <div class="input-field col s1 center-wrapper" style="height: 50px">
+                        <i class="material-icons tooltipped center-forced" data-position="top"
+                            data-tooltip="Pressione ENTER ou clique fora da caixa de texto para testar a expressão">help_outline</i>
+                    </div>
+                </div>
+                <div class="row card-panel">
+                    <h6 class="center-align blue-text darken-3">Testar strings em busca da RegExp indicada</h6>
+                    <div class="input-field col s6">
+                        <input placeholder="Insira seu texto aqui" id="text_one" type="text" onchange="Validate(event)">
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder="Insira seu texto aqui" id="text_two" type="text" onchange="Validate(event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="page-footer blue darken-3">
+        <div class="container">
+            <div class="row center-align">
+                <p class="col s12">Developed by: André Henrique Gonçales Dias - Agosto 2019 - Build with: HTML5 CSS Js
+                    MaterializeCSS</p>
+            </div>
+        </div>
+    </footer>
+
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="./materialize/js/materialize.min.js"></script>
+    <script>
+
+        // Initializing Tooltips
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.tooltipped');
+            var instances = M.Tooltip.init(elems, { delay: 50 });
+        });
+
+        function TriggerChange() {
+            // Create a new 'change' event
+            var event = new Event('change');
+            // Dispatch it.
+            document.getElementById('text_one').dispatchEvent(event);
+            document.getElementById('text_two').dispatchEvent(event);
+
+        }
+
+        function ClearClasses(userInput) {
+            userInput.className = ''
+        }
+
+        function Validate(event) {
+            let userRegexp = new RegExp(document.getElementById('user_regexp').value);
+            let userInput = event.target;
+            ClearClasses(userInput);
+            let userText = userInput.value;
+            if (userRegexp.exec(userText)) userInput.classList.add("right");
+            else userInput.classList.add("wrong");
+        }
+    </script>
+
+</body>
+
+</html>
