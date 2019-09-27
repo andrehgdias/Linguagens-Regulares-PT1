@@ -84,6 +84,14 @@
             <h4 class="blue-text darken-3 center-align">Autômato Finito</h4>
         </div>
         <div class="section">
+            <div>
+                <a class="waves-effect waves-light blue darken-1 btn-small modal-trigger" href="#modalUnica"><i
+                        class="material-icons left">remove</i>Única</a>
+                <a class="waves-effect waves-light blue darken-1 btn-small"><i
+                        class="material-icons left">menu</i>Multipla</a>
+                <a class="waves-effect waves-light blue darken-1 btn-small"><i
+                        class="material-icons left">linear_scale</i>Passo a Passo</a>
+            </div>
             <div class="card-panel">
                 <div id="canvasvis" class="h100"></div>
             </div>
@@ -91,9 +99,12 @@
                 <p><strong>Legenda:</strong><span class="legenda inicial-final"></span>Inicial e Final<span
                         class="legenda inicial"></span>Inicial<span class="legenda final"></span>Final
                 </p>
-                <p><strong>Para mudar um Estado para inicial ou final: </strong><i>Clique no Estado desejado > Menu > Opção I ou F</i></p>
-                <p><strong>Para apagar um Estado ou Transição: </strong><i>Clique no Estado ou Transição desejada > Menu > Opção Apagar</i></p>                
-                <p><strong>Para adicionar uma Transição: </strong><i>Menu > Opção Adicionar Transição > Clique no Estado de origem e arraste até o de destino</i></p>                            
+                <p><strong>Para mudar um Estado para inicial ou final: </strong><i>Clique no Estado desejado > Menu >
+                        Opção I ou F</i></p>
+                <p><strong>Para apagar um Estado ou Transição: </strong><i>Clique no Estado ou Transição desejada > Menu
+                        > Opção Apagar</i></p>
+                <p><strong>Para adicionar uma Transição: </strong><i>Menu > Opção Adicionar Transição > Clique no Estado
+                        de origem e arraste até o de destino</i></p>
             </div>
         </div>
     </div>
@@ -134,7 +145,24 @@
         </ul>
     </div>
 
+    <div id="modalUnica" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h5>Entrada Única</h5>
+            <div class="row">
+                <form class="col s12">
+                    <div class="input-field col s12">
+                        <input id="stringUnica" type="text" class="validate">
+                        <label for="stringUnica">String de entrada</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#modalUnica" class="modal-close waves-effect waves-light btn-flat">Cancela</a>
+            <a href="#modalUnica" class="waves-effect waves-light blue darken-1 btn-small" id="confirmaUnica">Confirma</a>
+        </div>
     </div>
+
 
 
     <!-- <footer class="page-footer blue darken-3">
@@ -162,6 +190,9 @@
                 }
             );
             $('.tooltipped').tooltip();
+            $(document).ready(function () {
+                $('.modal').modal();
+            });
         });
     </script>
 </body>
