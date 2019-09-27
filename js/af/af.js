@@ -30,7 +30,7 @@ let nodes = {
 let interaction = {
   hover: true,
   // hoverConnectedEdges: false,
-  selectConnectedEdges: false
+  selectConnectedEdges: true
 };
 
 let manipulation = {
@@ -43,15 +43,16 @@ let manipulation = {
     nodeData.label = "q" + id;
     callback(nodeData);
   },
-  addEdge: async function(edgeData, callback) {
-    let input = await Swal.fire({
+  addEdge: function(edgeData, callback) {
+    let input = Swal.fire({
       title: "Qual o simbolo que será validado?",
       input: "text",
       inputValidator: value => {
         if (value.length > 1 || !value.length) {
           return "O simbolo deve ser unitário!";
         }
-      }
+      },
+      type: "question"
     });
     let maxId = edgesData.max("id");
     let id = maxId != null ? maxId.id + 1 : 1;
@@ -197,7 +198,7 @@ finalButton.on("click", event => {
     nodesData.update(clickedNode);
     nodesAux.final.splice(index, 1);
   } else {
-    if (clickedNode.id === (nodesAux.initial?nodesAux.initial.id:-1)) {
+    if (clickedNode.id === (nodesAux.initial ? nodesAux.initial.id : -1)) {
       clickedNode.color = {
         border: "#eba134",
         background: "#ffc570",
@@ -227,7 +228,6 @@ nodesData.on("*", function(event, properties, senderId) {
   console.log(edgesData);
 });
 
-// ---------- ---------- ---------- ---------- ---------- //
 initialButton.hide();
 finalButton.hide();
 network.on("click", function(properties) {
@@ -242,4 +242,73 @@ network.on("click", function(properties) {
     initialButton.hide();
     finalButton.hide();
   }
+});
+// ---------- ---------- ---------- ---------- ---------- //
+// Testando Strings
+const inputStringUnica = $("#stringUnica");
+const buttonStringUnica = $("#confirmaUnica");
+
+const inputString1 = $("#string1");
+const inputString2 = $("#string2");
+const inputString3 = $("#string3");
+const inputString4 = $("#string4");
+const buttonStringMultipla = $("#confirmaMultipla");
+
+const validateString = arreyString => {
+  // Se estiver validando apenas 1 string, o arrey terá apenas um item, se for para multipla, será 4 strings
+
+  console.log("Validating", arreyString);
+  console.log("Nodes data", nodesData);
+  console.log("Nodes aux", nodesAux);
+  console.log("Edge data", edgesData);
+
+  let nodeInicial = nodesAux.initial;
+  if (nodeInicial) {
+    let nodesFinal = nodesAux.final;
+    if (nodesFinal.length > 0) {
+      // Lógica para validar UMA string
+      // O alaert abaixo é só copiar e colar se quiser mostar aa mensagem de sucesso!
+
+      if (arreyString.length = 1) {
+        // Unica
+        Swal.fire({
+          title: "Uhuuuuuul",
+          text: "Sua string foi aceita!",
+          type: "success"
+        });
+      }else if(arreyString.length = 4){
+        // Multipla
+        Swal.fire({
+          title: "Uhuuuuuul",
+          text: "Sua string foi aceita!",
+          type: "success"
+        });
+      }
+    } else {
+      Swal.fire({
+        title: "Sem estados finais!",
+        text: "Defina ao menos um estado final",
+        type: "error"
+      });
+    }
+  } else {
+    Swal.fire({
+      title: "Sem estados iniciais!",
+      text: "Defina um estado incial",
+      type: "error"
+    });
+  }
+};
+
+buttonStringUnica.click(function() {
+  validateString([inputStringUnica.val()]);
+});
+
+buttonStringMultipla.click(function() {
+  validateString([
+    inputString1.val(),
+    inputString2.val(),
+    inputString3.val(),
+    inputString4.val()
+  ]);
 });
