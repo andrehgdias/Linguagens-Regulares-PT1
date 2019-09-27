@@ -266,20 +266,21 @@ const validateString = arreyString => {
   if (nodeInicial) {
     let nodesFinal = nodesAux.final;
     if (nodesFinal.length > 0) {
-      // Lógica para validar UMA string
-      // O alaert abaixo é só copiar e colar se quiser mostar aa mensagem de sucesso!
-
-      if (arreyString.length = 1) {
+      if ((arreyString.length = 1)) {
+        // Lógica para validar asstring
         // Unica
+        // O alaert abaixo é só copiar e colar se quiser mostar aa mensagem de sucesso!
         Swal.fire({
-          title: "Uhuuuuuul",
+          title: "Uhuuuuuu",
           text: "Sua string foi aceita!",
           type: "success"
         });
-      }else if(arreyString.length = 4){
+      } else if ((arreyString.length = 4)) {
+        // Lógica para validar asstring
         // Multipla
+        // O alaert abaixo é só copiar e colar se quiser mostar aa mensagem de sucesso!
         Swal.fire({
-          title: "Uhuuuuuul",
+          title: "Uhuuuuuu",
           text: "Sua string foi aceita!",
           type: "success"
         });
