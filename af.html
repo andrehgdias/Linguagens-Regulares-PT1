@@ -42,46 +42,28 @@
         font-size: 12pt;
     }
 
-    .right {
-        font-weight: bold;
-        color: rgba(0, 192, 0, .85);
+    .h100 {
+        height: 100%;
     }
 
-    .wrong {
-        font-weight: bold;
-        color: rgba(255, 0, 0, .85);
+    .card-panel {
+        height: 60vh;
     }
 </style>
 
 <body>
     <div class="container">
         <div class="section">
-            <h4 class="blue-text darken-3 center-align">Regex Simulator 2019</h4>
+            <h4 class="blue-text darken-3 center-align">Autômato Finito</h4>
         </div>
         <div class="section">
             <div class="card-panel">
-                <div class="row">
-                    <div class="input-field col s11">
-                        <input id="user_regexp" type="text" onchange="TriggerChange()" />
-                        <label for="user_regexp">Expressão Regular</label>
-                    </div>
-                    <div class="input-field col s1 center-wrapper" style="height: 50px">
-                        <i class="material-icons tooltipped center-forced" data-position="top"
-                            data-tooltip="Pressione ENTER ou clique fora da caixa de texto para testar a expressão">help_outline</i>
-                    </div>
-                </div>
-                <div class="row card-panel">
-                    <h6 class="center-align blue-text darken-3">Testar strings em busca da RegExp indicada</h6>
-                    <div class="input-field col s6">
-                        <input placeholder="Insira seu texto aqui" id="text_one" type="text" onchange="Validate(event)">
-                    </div>
-                    <div class="input-field col s6">
-                        <input placeholder="Insira seu texto aqui" id="text_two" type="text" onchange="Validate(event)">
-                    </div>
-                </div>
+                <div id="canvasvis" class="h100"></div>
             </div>
         </div>
     </div>
+
+
     <footer class="page-footer blue darken-3">
         <div class="container">
             <div class="row center-align">
@@ -93,7 +75,6 @@
 
     <!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="./materialize/js/materialize.min.js"></script>
-    <script type="text/javascript" src="./js/regex.js"></script>
     <script type="text/javascript" src="./js/af.js"></script>
 </body>
 
