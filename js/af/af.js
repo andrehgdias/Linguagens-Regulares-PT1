@@ -43,8 +43,9 @@ let manipulation = {
     nodeData.label = "q" + id;
     callback(nodeData);
   },
-  addEdge: function(edgeData, callback) {
-    let input = Swal.fire({
+  addEdge: async function(edgeData, callback) {
+    console.warn("Adding Edge");
+    let input = await Swal.fire({
       title: "Qual o simbolo que será validado?",
       input: "text",
       inputValidator: value => {
@@ -54,6 +55,8 @@ let manipulation = {
       },
       type: "question"
     });
+
+    console.warn(input);
     let maxId = edgesData.max("id");
     let id = maxId != null ? maxId.id + 1 : 1;
     edgeData.label = input.value;
@@ -245,6 +248,8 @@ network.on("click", function(properties) {
 });
 // ---------- ---------- ---------- ---------- ---------- //
 // Testando Strings
+let nextNode = nodesAux.initial.id;
+
 const inputStringUnica = $("#stringUnica");
 const buttonStringUnica = $("#confirmaUnica");
 
@@ -269,12 +274,18 @@ const validateString = arreyString => {
       if ((arreyString.length = 1)) {
         // Lógica para validar asstring
         // Unica
-        // O alaert abaixo é só copiar e colar se quiser mostar aa mensagem de sucesso!
-        Swal.fire({
-          title: "Uhuuuuuu",
-          text: "Sua string foi aceita!",
-          type: "success"
-        });
+        if (analisa(arreyString[0]))
+          Swal.fire({
+            title: "Uhuuuuuu",
+            text: "Sua string foi aceita!",
+            type: "success"
+          });
+          else
+          Swal.fire({
+            title: "Ah, que pena!",
+            text: "Sua string foi rejeitada :(",
+            type: "error"
+          });
       } else if ((arreyString.length = 4)) {
         // Lógica para validar asstring
         // Multipla
@@ -313,3 +324,52 @@ buttonStringMultipla.click(function() {
     inputString4.val()
   ]);
 });
+
+function existeTransicao(node, transicao) {
+  let result = [];
+
+  for (var key in edgesData._data) {
+    let transicoes = edgesData._data[key].label;
+    console.log("Transições", transicoes);
+    for (let i = 0; i < transicoes.length; i++) {
+      if (
+        edgesData._data[key].from === node.id &&
+        (transicoes[i] === transicao)
+      ) {
+        result.push(edgesData._data[key].to);
+        console.log("Result", result);
+      }
+    }
+  }
+
+  return result;
+}
+
+function isFinal(nodeId) {
+  for (let i = 0; i < nodesAux.final.length; i++) {
+    if (nodesAux.final[i].id === nodeId) return true;
+  }
+  return false;
+}
+
+function analisa(text, node = nextNode) {
+  let charAtual = text.charAt(0);
+  let possibleNodes = existeTransicao(node, charAtual);
+
+  console.log("Node", node);
+
+  if (possibleNodes.length === 0) {
+    if (isFinal(node.id) && text.length === 0) {
+      //chegou no fim do texto e atingiu um estado final
+      return true;
+    }
+  }
+
+  for (let i = 0; i < possibleNodes.length; i++) {
+    if (analisa(text.substring(1), possibleNodes[i])) {
+      return true;
+    }
+  }
+
+  return false;
+}
