@@ -274,7 +274,7 @@ const validateString = arreyString => {
       if ((arreyString.length = 1)) {
         // Lógica para validar asstring
         // Unica
-        if (analisa(arreyString[0]))
+        if (checkString(arreyString[0]))
           Swal.fire({
             title: "Uhuuuuuu",
             text: "Sua string foi aceita!",
@@ -325,7 +325,7 @@ buttonStringMultipla.click(function() {
   ]);
 });
 
-function existeTransicao(node, transicao) {
+const hasTransition = (node, transicao) => {
   let result = [];
 
   for (var key in edgesData._data) {
@@ -345,28 +345,28 @@ function existeTransicao(node, transicao) {
   return result;
 }
 
-function isFinal(nodeId) {
+const isFinal = (nodeId) => {
   for (let i = 0; i < nodesAux.final.length; i++) {
     if (nodesAux.final[i].id === nodeId) return true;
   }
   return false;
 }
 
-function analisa(text, node = nextNode) {
+const checkString = (text, node = nextNode) => {
   let charAtual = text.charAt(0);
-  let possibleNodes = existeTransicao(node, charAtual);
+  let candidates = hasTransition(node, charAtual);
 
   console.log("Node", node);
 
-  if (possibleNodes.length === 0) {
+  if (candidates.length === 0) {
     if (isFinal(node.id) && text.length === 0) {
       //chegou no fim do texto e atingiu um estado final
       return true;
     }
   }
 
-  for (let i = 0; i < possibleNodes.length; i++) {
-    if (analisa(text.substring(1), possibleNodes[i])) {
+  for (let i = 0; i < candidates.length; i++) {
+    if (checkString(text.substring(1), candidates[i])) {
       return true;
     }
   }
