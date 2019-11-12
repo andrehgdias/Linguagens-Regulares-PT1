@@ -248,8 +248,6 @@ network.on("click", function(properties) {
 });
 // ---------- ---------- ---------- ---------- ---------- //
 // Testando Strings
-let nextNode = nodesAux.initial.id;
-
 const inputStringUnica = $("#stringUnica");
 const buttonStringUnica = $("#confirmaUnica");
 
@@ -257,12 +255,18 @@ const inputString1 = $("#string1");
 const inputString2 = $("#string2");
 const inputString3 = $("#string3");
 const inputString4 = $("#string4");
+console.log(
+  inputString1.val(),
+  inputString2.val(),
+  inputString3.val(),
+  inputString4.val()
+);
 const buttonStringMultipla = $("#confirmaMultipla");
 
 const validateString = arreyString => {
   // Se estiver validando apenas 1 string, o arrey terá apenas um item, se for para multipla, será 4 strings
-
   console.log("Validating", arreyString);
+  console.log(arreyString.length);
   console.log("Nodes data", nodesData);
   console.log("Nodes aux", nodesAux);
   console.log("Edge data", edgesData);
@@ -271,30 +275,51 @@ const validateString = arreyString => {
   if (nodeInicial) {
     let nodesFinal = nodesAux.final;
     if (nodesFinal.length > 0) {
-      if ((arreyString.length = 1)) {
-        // Lógica para validar asstring
+      if (arreyString.length === 1) {
         // Unica
-        if (checkString(arreyString[0]))
+        if (checkString(arreyString[0], nodeInicial.id))
           Swal.fire({
             title: "Uhuuuuuu",
-            text: "Sua string foi aceita!",
+            text: `Sua string ${arreyString[0]} foi aceita!`,
             type: "success"
           });
-          else
+        else
           Swal.fire({
             title: "Ah, que pena!",
-            text: "Sua string foi rejeitada :(",
+            text: `Sua string ${arreyString[0]} foi rejeitada :(`,
             type: "error"
           });
-      } else if ((arreyString.length = 4)) {
-        // Lógica para validar asstring
+      } else if (arreyString.length === 4) {
         // Multipla
-        // O alaert abaixo é só copiar e colar se quiser mostar aa mensagem de sucesso!
-        Swal.fire({
-          title: "Uhuuuuuu",
-          text: "Sua string foi aceita!",
-          type: "success"
-        });
+        console.warn("Multipla");
+        let accepted = [];
+        for (let string of arreyString) {
+          if (checkString(string, nodeInicial.id)) {
+            console.log(string, " foi aceita");
+            accepted.push(string);
+          } else {
+            console.log(string, " foi rejeitada");
+          }
+        }
+        if (accepted.length) {
+          let text = "";
+          text = accepted[0];
+          if (accepted.length > 1)
+            for (let i = 1; i < accepted.length; i++)
+              text = text + ", " + accepted[i];
+
+          Swal.fire({
+            title: "Uhuuuuuu",
+            text: `Suas strings ${text} foi aceita!`,
+            type: "success"
+          });
+        } else {
+          Swal.fire({
+            title: "Ah, que pena!",
+            text: `Suas strings foram rejeitada :(`,
+            type: "error"
+          });
+        }
       }
     } else {
       Swal.fire({
@@ -313,10 +338,12 @@ const validateString = arreyString => {
 };
 
 buttonStringUnica.click(function() {
+  console.log("String unica");
   validateString([inputStringUnica.val()]);
 });
 
 buttonStringMultipla.click(function() {
+  console.log("String multipla");
   validateString([
     inputString1.val(),
     inputString2.val(),
@@ -325,17 +352,14 @@ buttonStringMultipla.click(function() {
   ]);
 });
 
-const hasTransition = (node, transicao) => {
+const hasTransition = (nodeId, transicao) => {
   let result = [];
 
   for (var key in edgesData._data) {
     let transicoes = edgesData._data[key].label;
     console.log("Transições", transicoes);
     for (let i = 0; i < transicoes.length; i++) {
-      if (
-        edgesData._data[key].from === node.id &&
-        (transicoes[i] === transicao)
-      ) {
+      if (edgesData._data[key].from === nodeId && transicoes[i] === transicao) {
         result.push(edgesData._data[key].to);
         console.log("Result", result);
       }
@@ -343,23 +367,23 @@ const hasTransition = (node, transicao) => {
   }
 
   return result;
-}
+};
 
-const isFinal = (nodeId) => {
+const isFinal = nodeId => {
   for (let i = 0; i < nodesAux.final.length; i++) {
     if (nodesAux.final[i].id === nodeId) return true;
   }
   return false;
-}
+};
 
-const checkString = (text, node = nextNode) => {
+const checkString = (text, nodeId) => {
   let charAtual = text.charAt(0);
-  let candidates = hasTransition(node, charAtual);
+  let candidates = hasTransition(nodeId, charAtual);
 
-  console.log("Node", node);
+  console.log("Node", nodeId);
 
   if (candidates.length === 0) {
-    if (isFinal(node.id) && text.length === 0) {
+    if (isFinal(nodeId) && text.length === 0) {
       //chegou no fim do texto e atingiu um estado final
       return true;
     }
@@ -372,4 +396,4 @@ const checkString = (text, node = nextNode) => {
   }
 
   return false;
-}
+};
