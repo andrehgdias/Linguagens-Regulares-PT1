@@ -55,6 +55,7 @@ verifica(entrada){
 		let k=0;
 		let	testa = this.raiz;
 		let anterior=testa;
+		if(testa===undefined) return false;
 		while(testa!==undefined && anterior!==undefined && i< entrada.length && (i>0 ||i===0) ){
 			if(testa.getTerminal()===entrada[i]){
 				k=0;
@@ -186,6 +187,7 @@ function criaEstados(){
 	console.log(gr.getRaiz().getLhs());
 	for(let i=0; i<regras.length;i++){
 		if(adicionado(regras[i].getLhs(),adicionados)){
+			console.log(regras);
 			adicionados = criaTransicao(regras[i],adicionados,a);
 		}
 		else{
