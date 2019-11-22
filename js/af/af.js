@@ -255,12 +255,7 @@ const inputString1 = $("#string1");
 const inputString2 = $("#string2");
 const inputString3 = $("#string3");
 const inputString4 = $("#string4");
-console.log(
-  inputString1.val(),
-  inputString2.val(),
-  inputString3.val(),
-  inputString4.val()
-);
+
 const buttonStringMultipla = $("#confirmaMultipla");
 
 const validateString = arreyString => {
@@ -316,7 +311,7 @@ const validateString = arreyString => {
         } else {
           Swal.fire({
             title: "Ah, que pena!",
-            text: `Suas strings foram rejeitada :(`,
+            text: `Suas strings foram rejeitadas :(`,
             type: "error"
           });
         }
@@ -396,4 +391,45 @@ const checkString = (text, nodeId) => {
   }
 
   return false;
+};
+
+const describe = () => {
+  console.info("Describing");
+  console.log("Nodes", nodesData);
+  console.log("Edges", edgesData);
+
+
+  let ids = nodesData.getIds();
+  console.log(ids);
+  nodesData.add(
+    {id: ids[ids.length - 1] + 1, label: "q" + (ids[ids.length - 1] + 1)}
+  );
+};
+
+const openFile = event => {
+  var input = event.target;
+
+  var reader = new FileReader();
+  reader.onload = function() {
+    if (reader.result) {
+      var text = reader.result;
+
+      parser = new DOMParser();
+      xmlDoc = parser.parseFromString(text, "text/xml");
+
+      let json = JSON.parse(xml2json(xmlDoc, "    "));
+      console.info("xml parsed", json);
+      if (json.structure.type === "fa") {
+        let jsonConvertedAsXml = json2xml(json, "");
+        console.log("JSON parsed", jsonConvertedAsXml);
+      } else {
+        Swal.fire({
+          title: "Arquivo inválido!",
+          text: "O arquivo selecionado não é um AF exportado pelo JFLAP",
+          type: "error"
+        });
+      }
+    }
+  };
+  reader.readAsText(input.files[0]);
 };

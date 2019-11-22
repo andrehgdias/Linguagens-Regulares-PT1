@@ -112,7 +112,7 @@
     .tabs .tab a {
         color: #00ACC1;
     }
-    
+
     a.active {
         background-color: rgba(0, 139, 155, .2);
     }
@@ -140,7 +140,7 @@
             <ul class="tabs">
                 <li class="tab col s4"><a class="active" href="#regex">Regex</a></li>
                 <li class="tab col s4"><a href="#af">Automatos Finitos</a></li>
-                <li class="tab col s4 disabled"><a href="#gramatica">Gramática Regular</a></li>
+                <li class="tab col s4"><a href="#gramatica">Gramática Regular</a></li>
             </ul>
         </div>
         <div id="regex" class="col s12">
@@ -295,7 +295,67 @@
                 </div>
             </div>
         </div>
-        <div id="gramatica" class="col s12">Test 3</div>
+        <div id="gramatica" class="col s12">
+            <div class="container">
+                <h2>Gramática Regular</h2>
+
+                <hr />
+                <div>
+                    <p><strong>Verifica apenas GLUD </strong>
+                        <p><i>O símbolo inicial será o LHS da primeira linha</i></p>
+                        <p><i>Para regras com vazio, deixar RHS em branco</i></p>
+                </div>
+                <hr />
+                <!--<br /><br />-->
+
+                <div class="input-field">
+                    <input placeholder="Entrada" id="entrada" type="text">
+                    <button class="waves-effect waves-light blue darken-1 btn-small" onclick="linguagem(this)"
+                        type="button">Verificar</button>
+                </div>
+                <div class="table-responsive">
+                    <table id="products-table" class="highlight centered" style="border: 1px solid black;">
+                        <thead>
+                            <tr>
+                                <th>LHS</th>
+                                <th>RHS</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input placeholder="Símbolo inicial" type="text" name="lhs"></td>
+                                <td><input type="text" name="rhs"></td>
+                                <td class="actions">
+                                    <button class="waves-effect waves-light red darken-1 btn-small"
+                                        onclick="RemoveTableRow(this)" type="button">Remover</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" style="text-align: left;">
+                                    <button class="waves-effect waves-light green darken-1 btn-small"
+                                        onclick="AddTableRow(this)" type="button">Adicionar
+                                        regra</button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div>
+                    <button class="waves-effect waves-light blue darken-1 btn-small" onclick="criaEstados(this)"
+                        type="button">Converter</button>
+                </div>
+                <div>
+                    <p><strong>Ex. de entradas:</strong><i>
+                            <p> S-> aA</p>
+                            <p> A-> bB</p>
+                            <p> B-> </p>
+                        </i></p>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -311,11 +371,18 @@
     <!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="./jquery/jquery-3.4.1.js"></script>
     <script type="text/javascript" src="./materialize/js/materialize.min.js"></script>
+
     <script type="text/javascript" src="./js/regex.js"></script>
-    <script type="text/javascript" src="./js/af.js"></script>
+
     <script src="./sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="./js/af/xml2json.js"></script>
+    <script type="text/javascript" src="./js/af/json2xml.js"></script>
     <script type="text/javascript" src="./js/af/af.js"></script>
-    <script type="text/javascript" src="./js/af/af-aux.js"></script>
+
+
+    <script type="text/javascript" src="js/gr/funcao.js"></script>
+    <script type="text/javascript" src="js/gr/gr.js"></script>
+
     <script>
         $(document).ready(function () {
             $('.tabs').tabs();
