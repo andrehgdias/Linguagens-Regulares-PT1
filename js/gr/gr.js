@@ -73,7 +73,8 @@ verifica(entrada){
 				k++;
 				testa=anterior.getVariaveis()[k];
 				console.log(testa);
-				if(testa.getTerminal()!==entrada[i]) i--;
+				if(testa!==undefined)
+					if(testa.getTerminal()!==entrada[i]) i--;
 								console.log("c");
 			}
 		}
