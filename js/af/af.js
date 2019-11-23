@@ -637,7 +637,7 @@ function criaEstados() {
 
   nodesAux.initial = {
     id: a,
-    color : {
+    color: {
       border: "#555",
       background: "#ccc",
       highlight: {
@@ -645,10 +645,11 @@ function criaEstados() {
         background: "#fff"
       }
     }
-  }
+  };
   nodesData.update(nodesAux.initial);
-  console.info("Estado criado: Label/id -> ", adicionados[a], a);
+  console.info("Estado criado Inicial: Label/id -> ", adicionados[a], a);
   a++; //2
+
   console.log("Valor de a: ", a);
   for (let i = 0; i < regras.length; i++) {
     if (adicionado(regras[i].getLhs(), adicionados)) {
@@ -671,6 +672,7 @@ function criaEstados() {
       a = resposta.a;
     }
   }
+  $('.tabs').tabs("select", "af");
 }
 
 function criaTransicao(regra, adicionados, a) {
@@ -706,19 +708,47 @@ function criaTransicao(regra, adicionados, a) {
     var ids = edgesData.getIds();
     console.log("ids: ", ids);
     edgesData.update({
-      id: ids.length>0 ? ids[ids.length-1] + 1 : 1,
+      id: ids.length > 0 ? ids[ids.length - 1] + 1 : 1,
       from: adicionado(regra.getLhs(), adicionados),
       to: adicionado(regra.getRhs(), adicionados),
       label: terminal
-    })
+    });
     console.log(regra.getLhs() + " " + terminal + " " + regra.getRhs());
   } else {
+    if (!adicionado("Z", adicionados)) {
+      adicionados[a] = "Z";
+      nodesData.add({
+        id: a,
+        label: "Z",
+        x: Math.random() * 300,
+        y: Math.random() * 150
+      });
 
-    if (terminal === "\u03BB") {
-      console.log(regra.getLhs() + " " + "\u03BB" + " " + "final");
-    } else {
-      console.log(regra.getLhs() + " " + terminal + " " + "final");
+      nodesAux.final = [
+        {
+          id: a,
+          color: {
+            border: "#ff0000",
+            background: "#cc5555",
+            highlight: {
+              border: "#550000",
+              background: "#aa2222"
+            }
+          }
+        }
+      ];
+      nodesData.update(nodesAux.final[0]);
+      a++;
     }
+    console.log(regra.getLhs() + " " + "\u03BB" + " " + "final");
+    var ids = edgesData.getIds();
+    console.log("ids: ", ids);
+    edgesData.update({
+      id: ids.length > 0 ? ids[ids.length - 1] + 1 : 1,
+      from: adicionado(regra.getLhs(), adicionados),
+      to: adicionado("Z", adicionados),
+      label: terminal
+    });
   }
   return { adicionados, a };
 }
