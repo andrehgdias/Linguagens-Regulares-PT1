@@ -397,13 +397,13 @@ const describe = () => {
   console.info("Describing");
   console.log("Nodes", nodesData);
   console.log("Edges", edgesData);
-
-  let ids = nodesData.getIds();
-  console.log(ids);
-  nodesData.add({
-    id: ids[ids.length - 1] + 1,
-    label: "q" + (ids[ids.length - 1] + 1)
-  });
+  console.warn("Edges data", edgesData._data);
+  // let ids = nodesData.getIds();
+  // console.log(ids);
+  // nodesData.add({
+  //   id: ids[ids.length - 1] + 1,
+  //   label: "q" + (ids[ids.length - 1] + 1)
+  // });
 };
 
 const openFile = event => {
@@ -620,15 +620,41 @@ function adicionado(estado, aux) {
 }
 
 function criaEstados() {
+  console.warn("Criando estado");
+
   let gr = criaGR();
   let regras = gr.getRegras();
   var adicionados = [];
-  var a = 0;
+  var a = 1;
   console.log(gr.getRaiz().getLhs());
-  console.log(regras);
+  adicionados[a] = gr.getRaiz().getLhs();
+  nodesData.add({
+    id: a,
+    label: gr.getRaiz().getLhs(),
+    x: Math.random() * 300,
+    y: Math.random() * 150
+  });
+
+  nodesAux.initial = {
+    id: a,
+    color : {
+      border: "#555",
+      background: "#ccc",
+      highlight: {
+        border: "#000",
+        background: "#fff"
+      }
+    }
+  }
+  nodesData.update(nodesAux.initial);
+  console.info("Estado criado: Label/id -> ", adicionados[a], a);
+  a++; //2
+  console.log("Valor de a: ", a);
   for (let i = 0; i < regras.length; i++) {
     if (adicionado(regras[i].getLhs(), adicionados)) {
-      let resposta = criaTransicao(regras[i], adicionados, adicionado(regras[i].getLhs(), adicionados));
+      let resposta = criaTransicao(regras[i], adicionados, a);
+      console.log("Valor de a: ", a);
+      console.warn("Retorno da transição, valor de a: ", resposta.a);
       adicionados = resposta.adicionados;
       a = resposta.a;
     } else {
@@ -639,7 +665,7 @@ function criaEstados() {
         x: Math.random() * 300,
         y: Math.random() * 150
       });
-      a++;
+      // a++;
       let resposta = criaTransicao(regras[i], adicionados, a);
       adicionados = resposta.adicionados;
       a = resposta.a;
@@ -648,25 +674,46 @@ function criaEstados() {
 }
 
 function criaTransicao(regra, adicionados, a) {
+  console.warn("Criando transição");
+
   let terminal = regra.getTerminal();
-  let id;
   if (regra.getRhs() !== "0") {
+    console.info("Possui RHS: ", regra.getLhs(), regra.getRhs());
+
     if (adicionado(regra.getRhs(), adicionados)) {
-      id = adicionado(regra.getRhs(), adicionados);
+      console.warn("Manda p final");
     } else {
-      console.log(adicionados);
+      console.warn("Criando Estado dentro da função transição");
+      console.log("Valor de a: ", a);
+      a++;
+      console.log(
+        "Vetor adicionados antes de criar o estado na posição  'a': ",
+        adicionados,
+        a
+      );
       adicionados[a] = regra.getRhs();
       nodesData.add({
-        id,
+        id: a,
         label: adicionados[a],
         x: Math.random() * 300,
         y: Math.random() * 150
       });
-      id = a;
+      console.info("Estado criado: Label/id -> ", adicionados[a], a);
       a++;
+      console.log("Novo valor de a: ", a);
     }
+
+    var ids = edgesData.getIds();
+    console.log("ids: ", ids);
+    edgesData.update({
+      id: ids.length>0 ? ids[ids.length-1] + 1 : 1,
+      from: adicionado(regra.getLhs(), adicionados),
+      to: adicionado(regra.getRhs(), adicionados),
+      label: terminal
+    })
     console.log(regra.getLhs() + " " + terminal + " " + regra.getRhs());
   } else {
+
     if (terminal === "\u03BB") {
       console.log(regra.getLhs() + " " + "\u03BB" + " " + "final");
     } else {
