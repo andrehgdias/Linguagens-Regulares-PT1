@@ -538,7 +538,7 @@ criaGR = function() {
   let table = document.getElementById("products-table");
   let linha = table.getElementsByTagName("tr");
   let aux = "",
-    LHS = "";
+  LHS = "";
   let regras = [];
   let quant = 0;
 
@@ -549,6 +549,7 @@ criaGR = function() {
 
     aux = rhs;
     LHS = lhs;
+  if(LHS!==""){
     if (aux !== null && LHS !== null && "" !== aux) {
       if (aux.length > 2) {
         aux.trim();
@@ -587,6 +588,7 @@ criaGR = function() {
       console.log("6");
       quant++;
     }
+  }
   }
   let gr = new gramatica(regras, regras[0]);
   return gr;
