@@ -184,19 +184,26 @@
                 </div>
                 <div class="section">
                     <div>
-                        <a class="waves-effect waves-light blue darken-1 btn-small modal-trigger" href="#modalUnica"><i
-                                class="material-icons left">remove</i>Única</a>
-                        <a class="waves-effect waves-light blue darken-1 btn-small modal-trigger"
-                            href="#modalMultipla"><i class="material-icons left">menu</i>Multipla</a>
-                        <a class="waves-effect waves-light blue darken-1 btn-small"><i
-                                class="material-icons left">linear_scale</i>Passo a Passo</a>
+                        <span class="waves-effect waves-light blue darken-1 btn-small modal-trigger"
+                            href="#modalUnica"><i class="material-icons left">remove</i>Única</span>
+                        <span class="waves-effect waves-light blue darken-1 btn-small modal-trigger"
+                            href="#modalMultipla"><i class="material-icons left">menu</i>Multipla</span>
+                        <span class="waves-effect waves-light blue darken-1 btn-small"><i
+                                class="material-icons left">linear_scale</i>Passo a Passo</span>
 
                         <div class="file-field input-field" style="float: right; margin-top: 0px;">
-                            <span class="waves-effect waves-light blue darken-1 btn-small" style="height: 32.4px; line-height: 32.4px;">
-                                <span style="margin-top: 0px; line-height: 32.4px;">Importar AF</span>
+                            <span class="waves-effect waves-light blue darken-1 btn-small"
+                                style="line-height: 32.4px; height: 32.4px; margin-right: 3px;"
+                                onclick="exportAf(event)"><i class="material-icons left">arrow_upward</i>Exportar
+                                AF</span>
+                            <span class="waves-effect waves-light blue darken-1 btn-small"
+                                style="height: 32.4px; line-height: 32.4px;">
+                                <span style="margin-top: 0px; line-height: 32.4px;"><i
+                                        class="material-icons left">arrow_downward</i>Importar AF</span>
                                 <input type="file" style="height: 32.4px;" onchange="openFile(event)">
                             </span>
                         </div>
+
                     </div>
                     <div class="card-panel cp-af">
                         <div id="canvasvis" class="h100"></div>
@@ -393,6 +400,12 @@
             $(document).ready(function () {
                 $('.modal').modal();
             });
+
+            Swal.fire({
+                title: 'Atenção!',
+                icon: 'info',
+                text: 'Para reiniciar seu automato ou gramática a fim de realizar novos testes você precisará recarregar a página, do contrario as funções não funcionarão para o segundo teste.',
+            })
         });
     </script>
 </body>

@@ -405,6 +405,19 @@ const describe = () => {
   //   label: "q" + (ids[ids.length - 1] + 1)
   // });
 };
+const exportAf = event => {
+  if(nodesData.length > 0){
+  console.log("Exporting babyyyyyy");
+  console.log(nodesData);
+  console.log(edgesData);
+}else{
+  Swal.fire({
+    title: "Erro!",
+    text: "Não há nenhum automato definido!",
+    type: "error"
+  });
+}
+}
 
 const openFile = event => {
   var input = event.target;
