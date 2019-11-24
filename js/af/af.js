@@ -534,6 +534,11 @@ class gramatica {
   }
 }
 
+limpaGR = function(){
+    this.regras = [];
+    this.raiz = null;
+}
+
 criaGR = function() {
   let table = document.getElementById("products-table");
   let linha = table.getElementsByTagName("tr");
@@ -594,10 +599,7 @@ criaGR = function() {
   return gr;
 };
 
-function linguagem() {
-  let gr = criaGR();
-  let table = document.getElementById("products-table");
-  let linha = table.getElementsByTagName("tr");
+function ligaVariaveis(gr){
   for (let k = 0; k < gr.regras.length; k++) {
     for (let j = 0; j < gr.regras.length; j++) {
       if (gr.regras[k].getRhs() === gr.regras[j].getLhs()) {
@@ -605,6 +607,13 @@ function linguagem() {
       }
     }
   }
+}
+
+function linguagem() {
+  let gr = criaGR();
+  let table = document.getElementById("products-table");
+  let linha = table.getElementsByTagName("tr");
+  ligaVariaveis(gr);
   // console.log(gr.regras[0]);
   let entrada = document.getElementById("entrada").value;
   let inicial = linha[1].getElementsByTagName("input")[0].value;
@@ -623,7 +632,6 @@ function adicionado(estado, aux) {
 
 function criaEstados() {
   console.warn("Criando estado");
-
   let gr = criaGR();
   let regras = gr.getRegras();
   var adicionados = [];
@@ -753,4 +761,49 @@ function criaTransicao(regra, adicionados, a) {
     });
   }
   return { adicionados, a };
+}
+
+
+function AFgr(){
+  let i=1;
+  let novasRegras = [];
+  let j=0;
+  let letra = 65; 
+  let inicial;
+  if(nodesAux.initial===null) alert("Sem estados inicial e/ou finais!");
+  else{
+    inicial = nodesAux.initial.id; 
+    if(nodesData._data[i].label==="q1"){
+      while(nodesData._data[i]!==undefined && letra < 90){
+        if(nodesData._data[i].id === inicial) nodesData._data[i].label = String.fromCharCode(83); 
+        else{
+          if(letra === 83){
+            letra++;
+          }
+          else{
+            nodesData._data[i].label = String.fromCharCode(letra);
+            letra++;
+          }
+        }
+  
+        i++;  
+      }
+    }
+  }
+
+  i=1;
+
+  while(edgesData._data[i]!==undefined){
+    let LHS = nodesData.get(edgesData._data[i].from).label;
+    let RHS = nodesData.get(edgesData._data[i].to).label;
+    let terminal = edgesData._data[i].label;
+    i++;
+    novasRegras[j] = new regra(LHS, terminal, RHS);
+    if(LHS==="S") inicial = j;
+    j++;
+  }
+  let novaGR = new gramatica(novasRegras,novasRegras[inicial]);
+  console.log(novaGR.getRaiz());
+  ligaVariaveis(novaGR);
+  console.log(novaGR.getRegras());
 }
