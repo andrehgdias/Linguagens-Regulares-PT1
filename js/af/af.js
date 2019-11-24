@@ -418,8 +418,15 @@ const openFile = event => {
       xmlDoc = parser.parseFromString(text, "text/xml");
 
       let json = JSON.parse(xml2json(xmlDoc, "    "));
-      console.info("xml parsed", json);
+      delete json.structure.automaton["#comment"];
+      console.info("xml parsed without comment", json);
+
       if (json.structure.type === "fa") {
+        let nodes = json.structure.automaton.state;
+        let edges = json.structure.automaton.transition;
+
+        buildAf(nodes, edges);
+
         let jsonConvertedAsXml = json2xml(json, "");
         console.log("JSON parsed", jsonConvertedAsXml);
       } else {
@@ -432,6 +439,60 @@ const openFile = event => {
     }
   };
   reader.readAsText(input.files[0]);
+};
+
+const buildAf = (nodes, edges) => {
+  nodes.forEach(node => {
+    nodesData.add({
+      id: node["@id"],
+      label: node["@name"],
+      x: node.x,
+      y: node.y
+    });
+
+    if (node.hasOwnProperty("initial")) {
+      nodesAux.initial = {
+        id: node["@id"],
+        color: {
+          border: "#555",
+          background: "#ccc",
+          highlight: {
+            border: "#000",
+            background: "#fff"
+          }
+        }
+      };
+      nodesData.update(nodesAux.initial);
+    } else if (node.hasOwnProperty("final")) {
+      nodesAux.final.push({
+        id: node["@id"],
+        color: {
+          border: "#ff0000",
+          background: "#cc5555",
+          highlight: {
+            border: "#550000",
+            background: "#aa2222"
+          }
+        }
+      });
+      var index = nodesAux.final.findIndex(
+        nodeAux => nodeAux.id === node["@id"]
+      );
+      console.log(index);
+      nodesData.update(nodesAux.final[index]);
+    }
+  });
+  let i = 1;
+  edges.forEach(edge => {
+    var ids = edgesData.getIds();
+    edgesData.update({
+      id: ids.length > 0 ? ids[ids.length - 1] + 1 : i,
+      from: edge.from,
+      to: edge.to,
+      label: edge.read
+    });
+    i++;
+  });
 };
 
 // ==================================================================================
@@ -538,7 +599,7 @@ criaGR = function() {
   let table = document.getElementById("products-table");
   let linha = table.getElementsByTagName("tr");
   let aux = "",
-  LHS = "";
+    LHS = "";
   let regras = [];
   let quant = 0;
 
@@ -549,46 +610,46 @@ criaGR = function() {
 
     aux = rhs;
     LHS = lhs;
-  if(LHS!==""){
-    if (aux !== null && LHS !== null && "" !== aux) {
-      if (aux.length > 2) {
-        aux.trim();
-      }
-      for (let j = 0; j < aux.length; j++) {
-        //segundo for pra percorrer a regrara
-        if (aux.length > 1) {
-          if (aux.charAt(j) !== "|" && j + 1 === aux.length) {
-            regras[quant] = new regra(LHS.charAt(0), aux.charAt(j), "0");
-            console.log("1");
-          } else if (aux.charAt(j) !== "|" && aux.charAt(j + 1) !== "|") {
-            regras[quant] = new regra(
-              LHS.charAt(0),
-              aux.charAt(j),
-              aux.charAt(j + 1)
-            );
-            j = j + 2;
-            console.log("2");
-          } else if (aux.charAt(j) !== "|" && aux.charAt(j + 1) === "|") {
-            regras[quant] = new regra(LHS.charAt(0), aux.charAt(j), "0");
-            j = j + 1;
-            console.log("3");
-          } else if (aux.charAt(j) === "|") {
-            j++;
-            console.log("4");
-          }
-        } else {
-          console.log("5");
-          regras[quant] = new regra(LHS.charAt(0), aux.charAt(j), "0");
+    if (LHS !== "") {
+      if (aux !== null && LHS !== null && "" !== aux) {
+        if (aux.length > 2) {
+          aux.trim();
         }
+        for (let j = 0; j < aux.length; j++) {
+          //segundo for pra percorrer a regrara
+          if (aux.length > 1) {
+            if (aux.charAt(j) !== "|" && j + 1 === aux.length) {
+              regras[quant] = new regra(LHS.charAt(0), aux.charAt(j), "0");
+              console.log("1");
+            } else if (aux.charAt(j) !== "|" && aux.charAt(j + 1) !== "|") {
+              regras[quant] = new regra(
+                LHS.charAt(0),
+                aux.charAt(j),
+                aux.charAt(j + 1)
+              );
+              j = j + 2;
+              console.log("2");
+            } else if (aux.charAt(j) !== "|" && aux.charAt(j + 1) === "|") {
+              regras[quant] = new regra(LHS.charAt(0), aux.charAt(j), "0");
+              j = j + 1;
+              console.log("3");
+            } else if (aux.charAt(j) === "|") {
+              j++;
+              console.log("4");
+            }
+          } else {
+            console.log("5");
+            regras[quant] = new regra(LHS.charAt(0), aux.charAt(j), "0");
+          }
+          quant++;
+        }
+      }
+      if (aux === "") {
+        regras[quant] = new regra(LHS.charAt(0), "\u03BB", "0");
+        console.log("6");
         quant++;
       }
     }
-    if (aux === "") {
-      regras[quant] = new regra(LHS.charAt(0), "\u03BB", "0");
-      console.log("6");
-      quant++;
-    }
-  }
   }
   let gr = new gramatica(regras, regras[0]);
   return gr;
@@ -674,7 +735,7 @@ function criaEstados() {
       a = resposta.a;
     }
   }
-  $('.tabs').tabs("select", "af");
+  $(".tabs").tabs("select", "af");
 }
 
 function criaTransicao(regra, adicionados, a) {
