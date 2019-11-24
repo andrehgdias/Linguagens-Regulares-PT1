@@ -608,10 +608,7 @@ class gramatica {
   }
 }
 
-limpaGR = function(){
-    this.regras = [];
-    this.raiz = null;
-}
+
 
 criaGR = function() {
   let table = document.getElementById("products-table");
