@@ -578,7 +578,6 @@ class gramatica {
           i++;
           console.log(testa);
         } else if (testa.getTerminal() === "\u03BB") {
-          //arrumar vazio
           k++;
           testa = testa.getVariaveis[k];
           i++;
@@ -874,7 +873,27 @@ function AFgr(){
     j++;
   }
   let novaGR = new gramatica(novasRegras,novasRegras[inicial]);
-  console.log(novaGR.getRaiz());
   ligaVariaveis(novaGR);
-  console.log(novaGR.getRegras());
+  GRtable(novaGR);
 }
+
+function GRtable(gr){
+  regras = gr.getRegras();
+  let table = document.getElementById("products-table");
+  let cols = "";  
+  let linha = table.getElementsByTagName("tr");
+  linha[1].getElementsByTagName("input")[0].value=regras[0].getLhs();
+  linha[1].getElementsByTagName("input")[1].value=regras[0].getTerminal()+regras[0].getRhs();
+  cols+=linha;
+  for(let i=1;i<regras.length;i++){
+    let newRow = $("<tr>");
+    let cols = "";
+      cols += '<td><input value='+regras[i].getLhs()+'></td>';
+      cols += '<td><input value='+regras[i].getTerminal()+regras[i].getRhs()+'><td>';
+      cols +=
+      '<button class="waves-effect waves-light red darken-1 btn-small" onclick="RemoveTableRow(this)" type="button">Remover</button>';
+      cols += "</td>";
+      newRow.append(cols);
+    $("#products-table").append(newRow);
+    }
+  }

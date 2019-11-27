@@ -1,6 +1,6 @@
 (function($) {
   RemoveTableRow = function(handler) {
-    var tr = $(handler).closest("tr");
+    let tr = $(handler).closest("tr");
 
     tr.fadeOut(400, function() {
       tr.remove();
@@ -10,8 +10,8 @@
   };
 
   AddTableRow = function() {
-    var newRow = $("<tr>");
-    var cols = "";
+    let newRow = $("<tr>");
+    let cols = "";
     cols += '<td><input type="text" name="lhs"></td>';
 
     cols += '<td><input type="text" name="rhs"></td>';
