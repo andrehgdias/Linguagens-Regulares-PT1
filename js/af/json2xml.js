@@ -5,41 +5,72 @@
 	Author:  Stefan Goessner/2006
 	Web:     http://goessner.net/ 
 */
-function json2xml(o, tab) {
-   var toXml = function(v, name, ind) {
-      var xml = "";
-      if (v instanceof Array) {
-         for (var i=0, n=v.length; i<n; i++)
-            xml += ind + toXml(v[i], name, ind+"\t") + "\n";
-      }
-      else if (typeof(v) == "object") {
-         var hasChild = false;
-         xml += ind + "<" + name;
-         for (var m in v) {
-            if (m.charAt(0) == "@")
-               xml += " " + m.substr(1) + "=\"" + v[m].toString() + "\"";
-            else
-               hasChild = true;
+
+function json2xml(nodesData, edgeData, initialNode, finalNodes) {
+   let xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' +
+      '<structure>\n' +
+      '<type>fa</type>\n' +
+      '<automaton>\n';
+
+   let nodes = nodesData._data;
+   nodes.length = nodesData.length;
+   console.warn(nodes);
+   let edges = edgesData._data;
+   edges.length = edgesData.length;
+   console.warn(edges);
+
+   let count = nodes.length;
+   //adicionando estados
+   for (var i in nodes) {
+
+      if (nodes.hasOwnProperty(i)) {
+         xml += `<state id="${nodes[i].id}" name="${nodes[i].label}">\n`;
+         xml += `<x>${nodes[i].x}</x>\n`;
+         xml += `<y>${nodes[i].y}</y>\n`;
+         if (initialNode.id === nodes[i].id) {
+            xml += `<initial/>\n`;
          }
-         xml += hasChild ? ">" : "/>";
-         if (hasChild) {
-            for (var m in v) {
-               if (m == "#text")
-                  xml += v[m];
-               else if (m == "#cdata")
-                  xml += "<![CDATA[" + v[m] + "]]>";
-               else if (m.charAt(0) != "@")
-                  xml += toXml(v[m], m, ind+"\t");
+
+         let finals = [];
+         for (var node in finalNodes) {
+            if (finalNodes.hasOwnProperty(node)) {
+               finals.push(finalNodes[node].id);
             }
-            xml += (xml.charAt(xml.length-1)=="\n"?ind:"") + "</" + name + ">";
          }
+         for (let j = 0; j < finals.length; j++) {
+            if (String(nodes[i].id) == finals[j]) {
+               xml += `<final/>\n`;
+               break;
+            }
+         };
+         xml += `</state>\n`;
       }
-      else {
-         xml += ind + "<" + name + ">" + v.toString() +  "</" + name + ">";
+      count--;
+      if (count === 0) break;
+   }
+
+   count = edges.length;
+   //adicionando transições
+   for (var i in edges) {
+      if (edges.hasOwnProperty(i)) {
+         xml += `<transition>\n`;
+         xml += `<from>${edges[i].from}</from>\n`;
+         xml += `<to>${edges[i].to}</to>\n`;
+         if (edges[i].label === "λ") {
+            xml += `<read/>\n`;
+         }
+         else {
+            xml += `<read>${edges[i].label}</read>\n`;
+         }
+         xml += `</transition>\n`;
       }
-      return xml;
-   }, xml="";
-   for (var m in o)
-      xml += toXml(o[m], m, "");
-   return tab ? xml.replace(/\t/g, tab) : xml.replace(/\t|\n/g, "");
+
+      count--;
+      if (count === 0) break;
+   };
+
+   xml += '</automaton>\n';
+   xml += '</structure>';
+
+   return xml;
 }
