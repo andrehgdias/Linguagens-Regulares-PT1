@@ -895,8 +895,13 @@ function AFgr() {
     let LHS = nodesData.get(edgesData._data[i].from).label;
     let RHS = nodesData.get(edgesData._data[i].to).label;
     let terminal = edgesData._data[i].label;
+    if(buscaTransicao(edgesData._data[i].to)){
+      novasRegras[j] = new regra(LHS, terminal, RHS); 
+    }
+    else{
+      novasRegras[j] = new regra(LHS, terminal, " ");
+    }
     i++;
-    novasRegras[j] = new regra(LHS, terminal, RHS);
     if (LHS === "S") inicial = j;
     j++;
   }
@@ -905,6 +910,17 @@ function AFgr() {
   ligaVariaveis(novaGR);
   GRtable(novaGR);
   $(".tabs").tabs("select", "gramatica");
+}
+
+function buscaTransicao(id){
+  let i=1;
+  while (edgesData._data[i] !== undefined) {
+    if(edgesData._data[i].from===id){
+      return true;
+    }
+    else i++;
+  }
+  return false;
 }
 
 function GRtable(gr){
