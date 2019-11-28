@@ -904,6 +904,7 @@ function AFgr() {
   console.log(novaGR.getRaiz());
   ligaVariaveis(novaGR);
   GRtable(novaGR);
+  $(".tabs").tabs("select", "gramatica");
 }
 
 function GRtable(gr){
