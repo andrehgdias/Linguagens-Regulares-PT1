@@ -36,14 +36,14 @@ let interaction = {
 let manipulation = {
   enabled: false,
   // initiallyActive: true
-  addNode: function(nodeData, callback) {
+  addNode: function (nodeData, callback) {
     let maxId = nodesData.max("id");
     let id = maxId != null ? maxId.id + 1 : 1;
     nodeData.id = id;
     nodeData.label = "q" + id;
     callback(nodeData);
   },
-  addEdge: async function(edgeData, callback) {
+  addEdge: async function (edgeData, callback) {
     console.warn("Adding Edge");
     let input = await Swal.fire({
       title: "Qual o simbolo que será validado?",
@@ -225,7 +225,7 @@ finalButton.on("click", event => {
   }
 });
 
-nodesData.on("*", function(event, properties, senderId) {
+nodesData.on("*", function (event, properties, senderId) {
   console.log("event", event, properties);
   console.log(nodesData);
   console.log(edgesData);
@@ -233,7 +233,7 @@ nodesData.on("*", function(event, properties, senderId) {
 
 initialButton.hide();
 finalButton.hide();
-network.on("click", function(properties) {
+network.on("click", function (properties) {
   var ids = parseInt(properties.nodes.toString());
   console.log(ids);
   if (ids) {
@@ -332,12 +332,12 @@ const validateString = arreyString => {
   }
 };
 
-buttonStringUnica.click(function() {
+buttonStringUnica.click(function () {
   console.log("String unica");
   validateString([inputStringUnica.val()]);
 });
 
-buttonStringMultipla.click(function() {
+buttonStringMultipla.click(function () {
   console.log("String multipla");
   validateString([
     inputString1.val(),
@@ -405,25 +405,37 @@ const describe = () => {
   //   label: "q" + (ids[ids.length - 1] + 1)
   // });
 };
-const exportAf = event => {
-  if(nodesData.length > 0){
-  console.log("Exporting babyyyyyy");
-  console.log(nodesData);
-  console.log(edgesData);
-}else{
-  Swal.fire({
-    title: "Erro!",
-    text: "Não há nenhum automato definido!",
-    type: "error"
-  });
-}
+const exportAf = async event => {
+  if (nodesData.length > 0) {
+    let conteudo =json2xml(nodesData, edgesData, nodesAux.initial, nodesAux.final);
+    let blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
+    let input = await Swal.fire({
+      title: "Qual o nome do arquivo?",
+      input: "text",
+      inputValidator: value => {
+        if (!value.length) {
+          return "Insira um nome";
+        }
+      },
+      type: "question"
+    })
+    let titulo = input.value;
+    saveAs(blob, titulo + ".jff");
+
+  } else {
+    Swal.fire({
+      title: "Erro!",
+      text: "Não há nenhum automato definido!",
+      type: "error"
+    });
+  }
 }
 
 const openFile = event => {
   var input = event.target;
 
   var reader = new FileReader();
-  reader.onload = function() {
+  reader.onload = function () {
     if (reader.result) {
       var text = reader.result;
 
@@ -464,17 +476,33 @@ const buildAf = (nodes, edges) => {
     });
 
     if (node.hasOwnProperty("initial")) {
-      nodesAux.initial = {
-        id: node["@id"],
-        color: {
-          border: "#555",
-          background: "#ccc",
-          highlight: {
-            border: "#000",
-            background: "#fff"
+      if (node.hasOwnProperty("final")) {
+        let config = {
+          id: node["@id"],
+          color: {
+            border: "#eba134",
+            background: "#ffc570",
+            highlight: {
+              border: "#b56e04",
+              background: "#ff9f12"
+            }
           }
-        }
-      };
+        };
+        nodesAux.final.push(config);
+        nodesAux.initial = config;
+      } else {
+        nodesAux.initial = {
+          id: node["@id"],
+          color: {
+            border: "#555",
+            background: "#ccc",
+            highlight: {
+              border: "#000",
+              background: "#fff"
+            }
+          }
+        };
+      }
       nodesData.update(nodesAux.initial);
     } else if (node.hasOwnProperty("final")) {
       nodesAux.final.push({
@@ -609,7 +637,7 @@ class gramatica {
 
 
 
-criaGR = function() {
+criaGR = function () {
   let table = document.getElementById("products-table");
   let linha = table.getElementsByTagName("tr");
   let aux = "",
@@ -669,7 +697,7 @@ criaGR = function() {
   return gr;
 };
 
-function ligaVariaveis(gr){
+function ligaVariaveis(gr) {
   for (let k = 0; k < gr.regras.length; k++) {
     for (let j = 0; j < gr.regras.length; j++) {
       if (gr.regras[k].getRhs() === gr.regras[j].getLhs()) {
@@ -834,45 +862,46 @@ function criaTransicao(regra, adicionados, a) {
 }
 
 
-function AFgr(){
-  let i=1;
+function AFgr() {
+  let i = 1;
   let novasRegras = [];
-  let j=0;
-  let letra = 65; 
+  let j = 0;
+  let letra = 65;
   let inicial;
-  if(nodesAux.initial===null) alert("Sem estados inicial e/ou finais!");
-  else{
-    inicial = nodesAux.initial.id; 
-    if(nodesData._data[i].label==="q1"){
-      while(nodesData._data[i]!==undefined && letra < 90){
-        if(nodesData._data[i].id === inicial) nodesData._data[i].label = String.fromCharCode(83); 
-        else{
-          if(letra === 83){
+  if (nodesAux.initial === null) alert("Sem estados inicial e/ou finais!");
+  else {
+    inicial = nodesAux.initial.id;
+    if (nodesData._data[i].label === "q1") {
+      while (nodesData._data[i] !== undefined && letra < 90) {
+        if (nodesData._data[i].id === inicial) nodesData._data[i].label = String.fromCharCode(83);
+        else {
+          if (letra === 83) {
             letra++;
           }
-          else{
+          else {
             nodesData._data[i].label = String.fromCharCode(letra);
             letra++;
           }
         }
-  
-        i++;  
+
+        i++;
       }
     }
   }
 
-  i=1;
+  i = 1;
 
-  while(edgesData._data[i]!==undefined){
+  while (edgesData._data[i] !== undefined) {
     let LHS = nodesData.get(edgesData._data[i].from).label;
     let RHS = nodesData.get(edgesData._data[i].to).label;
     let terminal = edgesData._data[i].label;
     i++;
     novasRegras[j] = new regra(LHS, terminal, RHS);
-    if(LHS==="S") inicial = j;
+    if (LHS === "S") inicial = j;
     j++;
   }
-  let novaGR = new gramatica(novasRegras,novasRegras[inicial]);
+  let novaGR = new gramatica(novasRegras, novasRegras[inicial]);
+  console.log(novaGR.getRaiz());
   ligaVariaveis(novaGR);
   GRtable(novaGR);
 }
